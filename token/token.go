@@ -2,18 +2,18 @@ package token
 
 const (
 	ILLEGAL = "ILLEGAL"
-	EOF 	= "EOF"
+	EOF     = "EOF"
 
 	// Identifiers + literals
-	IDENT 	= "IDENT"
-	INT	= "INT"
+	IDENT = "IDENT"
+	INT   = "INT"
 
 	// Operators
-	ASSIGN 	= "="
-	PLUS	= "+"
+	ASSIGN = "="
+	PLUS   = "+"
 
 	// Delimiters
-	COMMA	  = ","
+	COMMA     = ","
 	SEMICOLON = ";"
 
 	LPAREN = "("
@@ -23,13 +23,19 @@ const (
 
 	// Keywords
 	FUNCTION = "FUNCTION"
-	LET	 = "LET"
+	LET      = "LET"
 )
 
-type Token string
+// TokenType represents the type of the token. Setting it to string allows to use many things as types.
+type TokenType string
 
-type TokenType struct {
-	Type 	TokenType
+// A Token has a Type and a Literal.
+type Token struct {
+	Type    TokenType
 	Literal string
 }
 
+// New creates a new token from a given char and type.
+func New(tokenType TokenType, ch byte) Token {
+	return Token{Type: tokenType, Literal: string(ch)}
+}
