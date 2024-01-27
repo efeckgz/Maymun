@@ -43,14 +43,15 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 		tkn.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
-			tkn.Literal = l.readIdentifier()
+			tkn.Literal = l.readAll(isLetter) // set the literal first to use it in the table
 			tkn.Type = token.IdentLookup(tkn.Literal)
 			return
 		} else if isDigit(l.ch) {
 			tkn.Type = token.INT
-			tkn.Literal = l.readNumber()
+			tkn.Literal = l.readAll(isDigit)
 			return
 		}
+
 		tkn = token.New(token.ILLEGAL, l.ch)
 	}
 
@@ -58,19 +59,13 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	return
 }
 
-func (l *Lexer) readIdentifier() string {
+// readAll reads all the chars that satisfy the given condition.
+func (l *Lexer) readAll(condition func(ch byte) bool) string {
 	pos := l.position
-	for isLetter(l.ch) {
+	for condition(l.ch) {
 		l.readChar()
 	}
-	return l.input[pos:l.position]
-}
 
-func (l *Lexer) readNumber() string {
-	pos := l.position
-	for isDigit(l.ch) {
-		l.readChar()
-	}
 	return l.input[pos:l.position]
 }
 
