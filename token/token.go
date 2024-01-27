@@ -17,8 +17,12 @@ const (
 	ASTERISK = "*"
 	SLASH    = "/"
 
-	LT = "<"
-	GT = ">"
+	LT    = "<"
+	GT    = ">"
+	EQ    = "=="
+	NOTEQ = "!="
+	LTEQ  = "<="
+	GTEQ  = ">="
 
 	// Delimiters
 	COMMA     = ","
@@ -58,9 +62,14 @@ type Token struct {
 	Literal string
 }
 
-// New creates a new token from a given char and type.
-func New(tokenType Type, ch byte) Token {
+// FromChar creates a new token from one char.
+func FromChar(tokenType Type, ch byte) Token {
 	return Token{Type: tokenType, Literal: string(ch)}
+}
+
+// FromString returns a token from a string literal.
+func FromString(tokenType Type, literal string) Token {
+	return Token{Type: tokenType, Literal: literal}
 }
 
 // IdentLookup checks the keywords table to see weather the given identifier is in fact a keyword.

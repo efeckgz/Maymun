@@ -4,10 +4,10 @@ import "github.com/efeckgz/Maymun/token"
 
 // Lexer represents the lexer type.
 type Lexer struct {
-	input        string
-	position     int  // current position in input (points to current char)
-	readPosition int  // current reading postion in input (after current char)
-	ch           byte // current char under examination
+	input   string
+	pos     int  // current position in input (points to current char)
+	nextPos int  // current reading postion in input (after current char)
+	ch      byte // current char under examination
 }
 
 // New returns a new lexer from a given input.
@@ -23,33 +23,57 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 
 	switch l.ch {
 	case '=':
-		tkn = token.New(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch                                                // save the currently matched '='
+			l.readChar()                                              // read one more character, l.ch is now the next '='
+			tkn = token.FromString(token.EQ, string(ch)+string(l.ch)) // build the token.
+		} else {
+			tkn = token.FromChar(token.ASSIGN, l.ch)
+		}
 	case ';':
-		tkn = token.New(token.SEMICOLON, l.ch)
+		tkn = token.FromChar(token.SEMICOLON, l.ch)
 	case '(':
-		tkn = token.New(token.LPAREN, l.ch)
+		tkn = token.FromChar(token.LPAREN, l.ch)
 	case ')':
-		tkn = token.New(token.RPAREN, l.ch)
+		tkn = token.FromChar(token.RPAREN, l.ch)
 	case ',':
-		tkn = token.New(token.COMMA, l.ch)
+		tkn = token.FromChar(token.COMMA, l.ch)
 	case '+':
-		tkn = token.New(token.PLUS, l.ch)
+		tkn = token.FromChar(token.PLUS, l.ch)
 	case '-':
-		tkn = token.New(token.MINUS, l.ch)
+		tkn = token.FromChar(token.MINUS, l.ch)
 	case '!':
-		tkn = token.New(token.BANG, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tkn = token.FromString(token.NOTEQ, string(ch)+string(l.ch))
+		} else {
+			tkn = token.FromChar(token.BANG, l.ch)
+		}
 	case '*':
-		tkn = token.New(token.ASTERISK, l.ch)
+		tkn = token.FromChar(token.ASTERISK, l.ch)
 	case '/':
-		tkn = token.New(token.SLASH, l.ch)
+		tkn = token.FromChar(token.SLASH, l.ch)
 	case '<':
-		tkn = token.New(token.LT, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tkn = token.FromString(token.LTEQ, string(ch)+string(l.ch))
+		} else {
+			tkn = token.FromChar(token.LT, l.ch)
+		}
 	case '>':
-		tkn = token.New(token.GT, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			tkn = token.FromString(token.GTEQ, string(ch)+string(l.ch))
+		} else {
+			tkn = token.FromChar(token.GT, l.ch)
+		}
 	case '{':
-		tkn = token.New(token.LBRACE, l.ch)
+		tkn = token.FromChar(token.LBRACE, l.ch)
 	case '}':
-		tkn = token.New(token.RBRACE, l.ch)
+		tkn = token.FromChar(token.RBRACE, l.ch)
 	case 0:
 		tkn.Literal = ""
 		tkn.Type = token.EOF
@@ -64,7 +88,7 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 			return
 		}
 
-		tkn = token.New(token.ILLEGAL, l.ch)
+		tkn = token.FromChar(token.ILLEGAL, l.ch)
 	}
 
 	l.readChar()
@@ -73,28 +97,36 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 
 // readAll reads all the chars that satisfy the given condition.
 func (l *Lexer) readAll(condition func(ch byte) bool) string {
-	pos := l.position
+	pos := l.pos
 	for condition(l.ch) {
 		l.readChar()
 	}
 
-	return l.input[pos:l.position]
+	return l.input[pos:l.pos]
 }
 
 func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
+	if l.nextPos >= len(l.input) {
 		l.ch = 0
 	} else {
-		l.ch = l.input[l.readPosition]
+		l.ch = l.input[l.nextPos]
 	}
 
-	l.position = l.readPosition
-	l.readPosition++
+	l.pos = l.nextPos
+	l.nextPos++
 }
 
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n' {
 		l.readChar()
+	}
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.nextPos > len(l.input) {
+		return 0
+	} else {
+		return l.input[l.nextPos] // do not increment the next pos as we are not moving to it.
 	}
 }
 
