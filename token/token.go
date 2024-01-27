@@ -2,55 +2,55 @@ package token
 
 // constants for the tokens.
 const (
-	ILLEGAL = "ILLEGAL"
+	Illegal = "Illegal"
 	EOF     = "EOF"
 
 	// Identifiers + literals
-	IDENT = "IDENT"
-	INT   = "INT"
+	Ident = "Ident"
+	Int   = "Int"
 
 	// Operators
-	ASSIGN   = "="
-	PLUS     = "+"
-	MINUS    = "-"
-	BANG     = "!"
-	ASTERISK = "*"
-	SLASH    = "/"
+	Assign   = "="
+	Plus     = "+"
+	Minus    = "-"
+	Bang     = "!"
+	Asterisk = "*"
+	Slash    = "/"
 
-	LT    = "<"
-	GT    = ">"
-	EQ    = "=="
-	NOTEQ = "!="
-	LTEQ  = "<="
-	GTEQ  = ">="
+	Lt    = "<"
+	Gt    = ">"
+	Eq    = "=="
+	Noteq = "!="
+	Lteq  = "<="
+	Gteq  = ">="
 
 	// Delimiters
-	COMMA     = ","
-	SEMICOLON = ";"
+	Comma     = ","
+	Semicolon = ";"
 
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	Lparen = "("
+	Rparen = ")"
+	Lbrace = "{"
+	Rbrace = "}"
 
 	// Keywords
-	FUNCTION = "FUNCTION"
-	LET      = "LET"
-	TRUE     = "TRUE"
-	FALSE    = "FALSE"
-	IF       = "IF"
-	ELSE     = "ELSE"
-	RETURN   = "RETURN"
+	Function = "Function"
+	Let      = "Let"
+	True     = "True"
+	False    = "False"
+	If       = "If"
+	Else     = "Else"
+	Return   = "Retrun"
 )
 
 var keywords = map[string]Type{
-	"fn":     FUNCTION,
-	"let":    LET,
-	"true":   TRUE,
-	"false":  FALSE,
-	"if":     IF,
-	"else":   ELSE,
-	"return": RETURN,
+	"fn":     Function,
+	"let":    Let,
+	"true":   True,
+	"false":  False,
+	"if":     If,
+	"else":   Else,
+	"return": Return,
 }
 
 // Type represents the type of the token. Setting it to string allows to use many things as types.
@@ -81,5 +81,5 @@ func IdentLookup(ident string) Type {
 		return token
 	}
 
-	return IDENT
+	return Ident
 }

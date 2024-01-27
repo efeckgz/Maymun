@@ -24,75 +24,73 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	switch l.ch {
 	case '=':
 		if l.peekChar() == '=' {
-			ch := l.ch                                                // save the currently matched '='
-			l.readChar()                                              // read one more character, l.ch is now the next '='
-			tkn = token.FromString(token.EQ, string(ch)+string(l.ch)) // build the token.
+			tkn = l.tokenEQ(token.Eq)
 		} else {
-			tkn = token.FromChar(token.ASSIGN, l.ch)
+			tkn = token.FromChar(token.Assign, l.ch)
 		}
 	case ';':
-		tkn = token.FromChar(token.SEMICOLON, l.ch)
+		tkn = token.FromChar(token.Semicolon, l.ch)
 	case '(':
-		tkn = token.FromChar(token.LPAREN, l.ch)
+		tkn = token.FromChar(token.Lparen, l.ch)
 	case ')':
-		tkn = token.FromChar(token.RPAREN, l.ch)
+		tkn = token.FromChar(token.Rparen, l.ch)
 	case ',':
-		tkn = token.FromChar(token.COMMA, l.ch)
+		tkn = token.FromChar(token.Comma, l.ch)
 	case '+':
-		tkn = token.FromChar(token.PLUS, l.ch)
+		tkn = token.FromChar(token.Plus, l.ch)
 	case '-':
-		tkn = token.FromChar(token.MINUS, l.ch)
+		tkn = token.FromChar(token.Minus, l.ch)
 	case '!':
 		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tkn = token.FromString(token.NOTEQ, string(ch)+string(l.ch))
+			tkn = l.tokenEQ(token.Noteq)
 		} else {
-			tkn = token.FromChar(token.BANG, l.ch)
+			tkn = token.FromChar(token.Bang, l.ch)
 		}
 	case '*':
-		tkn = token.FromChar(token.ASTERISK, l.ch)
+		tkn = token.FromChar(token.Asterisk, l.ch)
 	case '/':
-		tkn = token.FromChar(token.SLASH, l.ch)
+		tkn = token.FromChar(token.Slash, l.ch)
 	case '<':
 		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tkn = token.FromString(token.LTEQ, string(ch)+string(l.ch))
+			tkn = l.tokenEQ(token.Lteq)
 		} else {
-			tkn = token.FromChar(token.LT, l.ch)
+			tkn = token.FromChar(token.Lt, l.ch)
 		}
 	case '>':
 		if l.peekChar() == '=' {
-			ch := l.ch
-			l.readChar()
-			tkn = token.FromString(token.GTEQ, string(ch)+string(l.ch))
+			tkn = l.tokenEQ(token.Gteq)
 		} else {
-			tkn = token.FromChar(token.GT, l.ch)
+			tkn = token.FromChar(token.Gt, l.ch)
 		}
 	case '{':
-		tkn = token.FromChar(token.LBRACE, l.ch)
+		tkn = token.FromChar(token.Lbrace, l.ch)
 	case '}':
-		tkn = token.FromChar(token.RBRACE, l.ch)
+		tkn = token.FromChar(token.Rbrace, l.ch)
 	case 0:
-		tkn.Literal = ""
-		tkn.Type = token.EOF
+		tkn = token.FromString(token.EOF, "")
 	default:
 		if isLetter(l.ch) {
 			tkn.Literal = l.readAll(isLetter) // set the literal first to use it in the table
 			tkn.Type = token.IdentLookup(tkn.Literal)
 			return
 		} else if isDigit(l.ch) {
-			tkn.Type = token.INT
+			tkn.Type = token.Int
 			tkn.Literal = l.readAll(isDigit)
 			return
 		}
 
-		tkn = token.FromChar(token.ILLEGAL, l.ch)
+		tkn = token.FromChar(token.Illegal, l.ch)
 	}
 
 	l.readChar()
 	return
+}
+
+// tokenEQ builds a two-char input where the later char is a '='.
+func (l *Lexer) tokenEQ(tokenType token.Type) token.Token {
+	ch := l.ch                                                  // save the current char.
+	l.readChar()                                                // increment to the next char. l.ch is now '='.
+	return token.FromString(tokenType, string(ch)+string(l.ch)) // build the token.
 }
 
 // readAll reads all the chars that satisfy the given condition.
