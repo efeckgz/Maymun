@@ -7,7 +7,7 @@ import (
 )
 
 type testToken struct {
-	expectedType    token.TokenType
+	expectedType    token.Type
 	expectedLiteral string
 }
 
