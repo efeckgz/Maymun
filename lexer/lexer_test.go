@@ -26,12 +26,12 @@ func TestNextToken(t *testing.T) {
 	tests := []testToken{
 		{token.LET, "let"},
 		{token.IDENT, "five"},
-		{token.ASSIGN, "="}
+		{token.ASSIGN, "="},
 		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 		{token.LET, "let"},
 		{token.IDENT, "ten"},
-		{token.ASSIGN, "="}
+		{token.ASSIGN, "="},
 		{token.INT, "10"},
 		{token.SEMICOLON, ";"},
 		{token.LET, "let"},
