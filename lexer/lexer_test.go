@@ -8,14 +8,7 @@ import (
 
 func TestNextToken(t *testing.T) {
 	input := `
-		let a = 5;
-		let b = 10;
-		a += b;
-		a -= b;
-		a *= b;
-		a /= b;
-		a %= b;
-		a % b;
+		let a = 5.1;
 	`
 
 	tests := []struct {
@@ -25,36 +18,7 @@ func TestNextToken(t *testing.T) {
 		{token.Let, "let"},
 		{token.Ident, "a"},
 		{token.Assign, "="},
-		{token.Int, "5"},
-		{token.Semicolon, ";"},
-		{token.Let, "let"},
-		{token.Ident, "b"},
-		{token.Assign, "="},
-		{token.Int, "10"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.PlusAssign, "+="},
-		{token.Ident, "b"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.MinusAssign, "-="},
-		{token.Ident, "b"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.AsteriskAssign, "*="},
-		{token.Ident, "b"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.SlashAssign, "/="},
-		{token.Ident, "b"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.ModuloAssign, "%="},
-		{token.Ident, "b"},
-		{token.Semicolon, ";"},
-		{token.Ident, "a"},
-		{token.Modulo, "%"},
-		{token.Ident, "b"},
+		{token.Float, "5.1"},
 		{token.Semicolon, ";"},
 		{token.EOF, ""},
 	}

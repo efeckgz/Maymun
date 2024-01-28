@@ -97,8 +97,10 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 			tkn.Type = token.IdentLookup(tkn.Literal)
 			return
 		} else if isDigit(l.ch) {
-			tkn.Type = token.Int
-			tkn.Literal = l.readAll(isDigit)
+			// tkn.Type = token.Int
+			// tkn.Literal = l.readAll(isDigit)
+			// return
+			tkn = l.readNumber()
 			return
 		}
 
@@ -125,6 +127,44 @@ func (l *Lexer) readAll(condition func(ch byte) bool) string {
 
 	return l.input[pos:l.pos]
 }
+
+// readNumber reads a number input and returns the type of token based on the type of number read as well as the literal read.
+func (l *Lexer) readNumber() token.Token {
+	pos := l.pos // save the current position.
+	for isDigit(l.ch) {
+		l.readChar() // read until a non-digit char is found.
+	}
+
+	if l.ch != '.' {
+		// the non-digit was not a point, return integer token.
+		return token.FromString(token.Int, l.input[pos:l.pos])
+	}
+
+	// If the non-digit was a point, read digits again for the fraction part
+	l.readChar()
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+
+	return token.FromString(token.Float, l.input[pos:l.pos])
+}
+
+// func (l *Lexer) readFloat() string {
+// 	pos := l.pos
+// 	for isDigit(l.ch) {
+// 		l.readChar()
+// 	}
+
+// 	if l.ch == '.' {
+// 		// The next cahracter after a series of digits was a '.', indicating a float.
+// 		l.readChar() // read the '.' character.
+// 		for isDigit(l.ch) {
+// 			l.readChar()
+// 		}
+// 	}
+
+// 	return l.input[pos:l.pos]
+// }
 
 func (l *Lexer) readChar() {
 	if l.nextPos >= len(l.input) {
