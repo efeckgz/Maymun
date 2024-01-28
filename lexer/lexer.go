@@ -97,9 +97,6 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 			tkn.Type = token.IdentLookup(tkn.Literal)
 			return
 		} else if isDigit(l.ch) {
-			// tkn.Type = token.Int
-			// tkn.Literal = l.readAll(isDigit)
-			// return
 			tkn = l.generateNumberToken()
 			return
 		}
@@ -148,23 +145,6 @@ func (l *Lexer) generateNumberToken() token.Token {
 
 	return token.FromString(token.Float, l.input[pos:l.pos])
 }
-
-// func (l *Lexer) readFloat() string {
-// 	pos := l.pos
-// 	for isDigit(l.ch) {
-// 		l.readChar()
-// 	}
-
-// 	if l.ch == '.' {
-// 		// The next cahracter after a series of digits was a '.', indicating a float.
-// 		l.readChar() // read the '.' character.
-// 		for isDigit(l.ch) {
-// 			l.readChar()
-// 		}
-// 	}
-
-// 	return l.input[pos:l.pos]
-// }
 
 func (l *Lexer) readChar() {
 	if l.nextPos >= len(l.input) {
