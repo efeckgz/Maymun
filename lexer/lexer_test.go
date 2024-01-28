@@ -9,6 +9,7 @@ import (
 func TestNextToken(t *testing.T) {
 	input := `
 		let a = 5.1;
+		let b = 6;
 	`
 
 	tests := []struct {
@@ -19,6 +20,11 @@ func TestNextToken(t *testing.T) {
 		{token.Ident, "a"},
 		{token.Assign, "="},
 		{token.Float, "5.1"},
+		{token.Semicolon, ";"},
+		{token.Let, "let"},
+		{token.Ident, "b"},
+		{token.Assign, "="},
+		{token.Int, "6"},
 		{token.Semicolon, ";"},
 		{token.EOF, ""},
 	}

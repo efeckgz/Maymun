@@ -100,7 +100,7 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 			// tkn.Type = token.Int
 			// tkn.Literal = l.readAll(isDigit)
 			// return
-			tkn = l.readNumber()
+			tkn = l.generateNumberToken()
 			return
 		}
 
@@ -128,8 +128,8 @@ func (l *Lexer) readAll(condition func(ch byte) bool) string {
 	return l.input[pos:l.pos]
 }
 
-// readNumber reads a number input and returns the type of token based on the type of number read as well as the literal read.
-func (l *Lexer) readNumber() token.Token {
+// generateNumberToken reads a number input and returns the type of token based on the type of number read as well as the literal read.
+func (l *Lexer) generateNumberToken() token.Token {
 	pos := l.pos // save the current position.
 	for isDigit(l.ch) {
 		l.readChar() // read until a non-digit char is found.
