@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to Maymun programming language.")
+	fmt.Println("Maymun programming language v0.0.0")
 	fmt.Println("Please start by typing commands.")
 
 	repl.Start(os.Stdin, os.Stdout)
