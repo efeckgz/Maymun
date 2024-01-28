@@ -2,51 +2,52 @@ package token
 
 // constants for the tokens.
 const (
-	Illegal = "Illegal"
-	EOF     = "EOF"
+	Illegal Type = "Illegal"
+	EOF     Type = "EOF"
 
 	// Identifiers + literals
-	Ident = "Ident"
-	Int   = "Int"
+	Ident Type = "Ident"
+	Int   Type = "Int"
+	Float Type = "Float"
 
 	// Operators
-	Assign         = "="
-	Plus           = "+"
-	Minus          = "-"
-	Bang           = "!"
-	Asterisk       = "*"
-	Slash          = "/"
-	Modulo         = "%"
-	PlusAssign     = "+="
-	MinusAssign    = "-="
-	AsteriskAssign = "*="
-	SlashAssign    = "/="
-	ModuloAssign   = "%="
+	Assign         Type = "="
+	Plus           Type = "+"
+	Minus          Type = "-"
+	Bang           Type = "!"
+	Asterisk       Type = "*"
+	Slash          Type = "/"
+	Modulo         Type = "%"
+	PlusAssign     Type = "+="
+	MinusAssign    Type = "-="
+	AsteriskAssign Type = "*="
+	SlashAssign    Type = "/="
+	ModuloAssign   Type = "%="
 
-	Lt    = "<"
-	Gt    = ">"
-	Eq    = "=="
-	Noteq = "!="
-	Lteq  = "<="
-	Gteq  = ">="
+	Lt    Type = "<"
+	Gt    Type = ">"
+	Eq    Type = "=="
+	Noteq Type = "!="
+	Lteq  Type = "<="
+	Gteq  Type = ">="
 
 	// Delimiters
-	Comma     = ","
-	Semicolon = ";"
+	Comma     Type = ","
+	Semicolon Type = ";"
 
-	Lparen = "("
-	Rparen = ")"
-	Lbrace = "{"
-	Rbrace = "}"
+	Lparen Type = "("
+	Rparen Type = ")"
+	Lbrace Type = "{"
+	Rbrace Type = "}"
 
 	// Keywords
-	Function = "Function"
-	Let      = "Let"
-	True     = "True"
-	False    = "False"
-	If       = "If"
-	Else     = "Else"
-	Return   = "Retrun"
+	Function Type = "Function"
+	Let      Type = "Let"
+	True     Type = "True"
+	False    Type = "False"
+	If       Type = "If"
+	Else     Type = "Else"
+	Return   Type = "Retrun"
 )
 
 var keywords = map[string]Type{

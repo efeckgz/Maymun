@@ -7,6 +7,7 @@ type Lexer struct {
 	input   string
 	pos     int  // current position in input (points to current char)
 	nextPos int  // current reading postion in input (after current char)
+	prevPos int  // previous reading position in input (before current char)
 	ch      byte // current char under examination
 }
 
@@ -23,7 +24,7 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 
 	switch l.ch {
 	case '=':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.Eq)
 		} else {
 			tkn = token.FromChar(token.Assign, l.ch)
@@ -37,49 +38,49 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	case ',':
 		tkn = token.FromChar(token.Comma, l.ch)
 	case '+':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.PlusAssign)
 		} else {
 			tkn = token.FromChar(token.Plus, l.ch)
 		}
 	case '-':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.MinusAssign)
 		} else {
 			tkn = token.FromChar(token.Minus, l.ch)
 		}
 	case '!':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.Noteq)
 		} else {
 			tkn = token.FromChar(token.Bang, l.ch)
 		}
 	case '*':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.AsteriskAssign)
 		} else {
 			tkn = token.FromChar(token.Asterisk, l.ch)
 		}
 	case '/':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.SlashAssign)
 		} else {
 			tkn = token.FromChar(token.Slash, l.ch)
 		}
 	case '%':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.ModuloAssign)
 		} else {
 			tkn = token.FromChar(token.Modulo, l.ch)
 		}
 	case '<':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.Lteq)
 		} else {
 			tkn = token.FromChar(token.Lt, l.ch)
 		}
 	case '>':
-		if l.peekChar() == '=' {
+		if l.peekAhead() == '=' {
 			tkn = l.makeTwoCharTokenEQ(token.Gteq)
 		} else {
 			tkn = token.FromChar(token.Gt, l.ch)
@@ -132,6 +133,7 @@ func (l *Lexer) readChar() {
 		l.ch = l.input[l.nextPos]
 	}
 
+	l.prevPos = l.pos
 	l.pos = l.nextPos
 	l.nextPos++
 }
@@ -142,12 +144,22 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-func (l *Lexer) peekChar() byte {
+// peekAhead looks at the next character without incrementing l.pos
+func (l *Lexer) peekAhead() byte {
 	if l.nextPos > len(l.input) {
 		return 0
-	} else {
-		return l.input[l.nextPos] // do not increment the next pos as we are not moving to it.
 	}
+
+	return l.input[l.nextPos] // do not increment the next pos as we are not moving to it.
+}
+
+// peekBehind looks at the previous character without decrementing l.pos
+func (l *Lexer) peekBehind() byte {
+	if l.prevPos < 0 {
+		return 0
+	}
+
+	return l.input[l.prevPos]
 }
 
 func isLetter(ch byte) bool {
