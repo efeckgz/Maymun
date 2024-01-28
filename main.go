@@ -1,8 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+
+	"github.com/efeckgz/Maymun/repl"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
-}
+	fmt.Println("Welcome to Maymun programming language.")
+	fmt.Println("Please start by typing commands.")
 
+	repl.Start(os.Stdin, os.Stdout)
+}
