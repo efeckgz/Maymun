@@ -97,7 +97,7 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 			tkn.Type = token.IdentLookup(tkn.Literal)
 			return
 		} else if isDigit(l.ch) {
-			tkn = l.generateNumberToken()
+			tkn = l.generateNumberToken() // handles illegal floating pooint such as "5."
 			return
 		}
 
@@ -138,9 +138,15 @@ func (l *Lexer) generateNumberToken() token.Token {
 	}
 
 	// If the non-digit was a point, read digits again for the fraction part
-	l.readChar()
+	l.readChar()           // read the '.' char
+	fractionCharsRead := 0 // a variable to track digits of the fraction. If this is less then 1, then the token is illegal.
 	for isDigit(l.ch) {
 		l.readChar()
+		fractionCharsRead++
+	}
+
+	if fractionCharsRead < 1 {
+		return token.FromString(token.Illegal, l.input[pos:l.pos])
 	}
 
 	return token.FromString(token.Float, l.input[pos:l.pos])
