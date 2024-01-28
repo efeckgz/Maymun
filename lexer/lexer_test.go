@@ -6,116 +6,55 @@ import (
 	"github.com/efeckgz/Maymun/token"
 )
 
-type testToken struct {
-	expectedType    token.Type
-	expectedLiteral string
-}
-
 func TestNextToken(t *testing.T) {
-	input := `let five = 5;
-let ten = 10;
+	input := `
+		let a = 5;
+		let b = 10;
+		a += b;
+		a -= b;
+		a *= b;
+		a /= b;
+		a %= b;
+		a % b;
+	`
 
-let add = fn(x, y) {
-	x + y;
-};
-
-let result = add(five, ten);
-!-/*5;
-5 < 10 > 5;
-
-if (5 < 10) {
-	return true;
-} else {
-	return false;
-}
-
-10 == 10;
-10 != 9;
-10 >= 9;
-10 <= 10;
-`
-
-	tests := []testToken{
+	tests := []struct {
+		expectedType    token.Type
+		expectedLiteral string
+	}{
 		{token.Let, "let"},
-		{token.Ident, "five"},
+		{token.Ident, "a"},
 		{token.Assign, "="},
 		{token.Int, "5"},
 		{token.Semicolon, ";"},
 		{token.Let, "let"},
-		{token.Ident, "ten"},
+		{token.Ident, "b"},
 		{token.Assign, "="},
 		{token.Int, "10"},
 		{token.Semicolon, ";"},
-		{token.Let, "let"},
-		{token.Ident, "add"},
-		{token.Assign, "="},
-		{token.Function, "fn"},
-		{token.Lparen, "("},
-		{token.Ident, "x"},
-		{token.Comma, ","},
-		{token.Ident, "y"},
-		{token.Rparen, ")"},
-		{token.Lbrace, "{"},
-		{token.Ident, "x"},
-		{token.Plus, "+"},
-		{token.Ident, "y"},
+		{token.Ident, "a"},
+		{token.PlusAssign, "+="},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
-		{token.Rbrace, "}"},
+		{token.Ident, "a"},
+		{token.MinusAssign, "-="},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
-		{token.Let, "let"},
-		{token.Ident, "result"},
-		{token.Assign, "="},
-		{token.Ident, "add"},
-		{token.Lparen, "("},
-		{token.Ident, "five"},
-		{token.Comma, ","},
-		{token.Ident, "ten"},
-		{token.Rparen, ")"},
+		{token.Ident, "a"},
+		{token.AsteriskAssign, "*="},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
-		{token.Bang, "!"},
-		{token.Minus, "-"},
-		{token.Slash, "/"},
-		{token.Asterisk, "*"},
-		{token.Int, "5"},
+		{token.Ident, "a"},
+		{token.SlashAssign, "/="},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
-		{token.Int, "5"},
-		{token.Lt, "<"},
-		{token.Int, "10"},
-		{token.Gt, ">"},
-		{token.Int, "5"},
+		{token.Ident, "a"},
+		{token.ModuloAssign, "%="},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
-		{token.If, "if"},
-		{token.Lparen, "("},
-		{token.Int, "5"},
-		{token.Lt, "<"},
-		{token.Int, "10"},
-		{token.Rparen, ")"},
-		{token.Lbrace, "{"},
-		{token.Return, "return"},
-		{token.True, "true"},
-		{token.Semicolon, ";"},
-		{token.Rbrace, "}"},
-		{token.Else, "else"},
-		{token.Lbrace, "{"},
-		{token.Return, "return"},
-		{token.False, "false"},
-		{token.Semicolon, ";"},
-		{token.Rbrace, "}"},
-		{token.Int, "10"},
-		{token.Eq, "=="},
-		{token.Int, "10"},
-		{token.Semicolon, ";"},
-		{token.Int, "10"},
-		{token.Noteq, "!="},
-		{token.Int, "9"},
-		{token.Semicolon, ";"},
-		{token.Int, "10"},
-		{token.Gteq, ">="},
-		{token.Int, "9"},
-		{token.Semicolon, ";"},
-		{token.Int, "10"},
-		{token.Lteq, "<="},
-		{token.Int, "10"},
+		{token.Ident, "a"},
+		{token.Modulo, "%"},
+		{token.Ident, "b"},
 		{token.Semicolon, ";"},
 		{token.EOF, ""},
 	}

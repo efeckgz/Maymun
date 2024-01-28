@@ -24,7 +24,7 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	switch l.ch {
 	case '=':
 		if l.peekChar() == '=' {
-			tkn = l.tokenEQ(token.Eq)
+			tkn = l.makeTwoCharTokenEQ(token.Eq)
 		} else {
 			tkn = token.FromChar(token.Assign, l.ch)
 		}
@@ -37,28 +37,50 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	case ',':
 		tkn = token.FromChar(token.Comma, l.ch)
 	case '+':
-		tkn = token.FromChar(token.Plus, l.ch)
+		if l.peekChar() == '=' {
+			tkn = l.makeTwoCharTokenEQ(token.PlusAssign)
+		} else {
+			tkn = token.FromChar(token.Plus, l.ch)
+		}
 	case '-':
-		tkn = token.FromChar(token.Minus, l.ch)
+		if l.peekChar() == '=' {
+			tkn = l.makeTwoCharTokenEQ(token.MinusAssign)
+		} else {
+			tkn = token.FromChar(token.Minus, l.ch)
+		}
 	case '!':
 		if l.peekChar() == '=' {
-			tkn = l.tokenEQ(token.Noteq)
+			tkn = l.makeTwoCharTokenEQ(token.Noteq)
 		} else {
 			tkn = token.FromChar(token.Bang, l.ch)
 		}
 	case '*':
-		tkn = token.FromChar(token.Asterisk, l.ch)
+		if l.peekChar() == '=' {
+			tkn = l.makeTwoCharTokenEQ(token.AsteriskAssign)
+		} else {
+			tkn = token.FromChar(token.Asterisk, l.ch)
+		}
 	case '/':
-		tkn = token.FromChar(token.Slash, l.ch)
+		if l.peekChar() == '=' {
+			tkn = l.makeTwoCharTokenEQ(token.SlashAssign)
+		} else {
+			tkn = token.FromChar(token.Slash, l.ch)
+		}
+	case '%':
+		if l.peekChar() == '=' {
+			tkn = l.makeTwoCharTokenEQ(token.ModuloAssign)
+		} else {
+			tkn = token.FromChar(token.Modulo, l.ch)
+		}
 	case '<':
 		if l.peekChar() == '=' {
-			tkn = l.tokenEQ(token.Lteq)
+			tkn = l.makeTwoCharTokenEQ(token.Lteq)
 		} else {
 			tkn = token.FromChar(token.Lt, l.ch)
 		}
 	case '>':
 		if l.peekChar() == '=' {
-			tkn = l.tokenEQ(token.Gteq)
+			tkn = l.makeTwoCharTokenEQ(token.Gteq)
 		} else {
 			tkn = token.FromChar(token.Gt, l.ch)
 		}
@@ -86,8 +108,8 @@ func (l *Lexer) NextToken() (tkn token.Token) {
 	return
 }
 
-// tokenEQ builds a two-char input where the later char is a '='.
-func (l *Lexer) tokenEQ(tokenType token.Type) token.Token {
+// makeTwoCharTokenEQ builds a two-char input where the later char is a '='.
+func (l *Lexer) makeTwoCharTokenEQ(tokenType token.Type) token.Token {
 	ch := l.ch                                                  // save the current char.
 	l.readChar()                                                // increment to the next char. l.ch is now '='.
 	return token.FromString(tokenType, string(ch)+string(l.ch)) // build the token.
