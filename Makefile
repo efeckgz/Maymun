@@ -1,12 +1,13 @@
-BINARY_NAME=monkey
+BINARY_NAME=maymun
 
-all: build test run
+all: test build
 
 build:
 	go build -o bin/${BINARY_NAME} main.go
 
 test:
 	go test -v ./lexer
+	go test -v ./parser
 
 run:
 	./bin/${BINARY_NAME}
