@@ -12,6 +12,7 @@ func TestLetStatements(t *testing.T) {
 	let x = 5;
 	let y = 10;
 	let foobar = 838383;
+	let pi = 3.14;
 	`
 
 	l := lexer.New(input)
@@ -22,7 +23,7 @@ func TestLetStatements(t *testing.T) {
 		t.Fatal("ParseProgram() returned nil.")
 	}
 
-	if len(program.Statements) != 3 {
+	if len(program.Statements) != 4 {
 		t.Fatalf("Unexpected statement count: expected 3, got %d.\n", len(program.Statements))
 	}
 
@@ -32,6 +33,7 @@ func TestLetStatements(t *testing.T) {
 		{"x"},
 		{"y"},
 		{"foobar"},
+		{"pi"},
 	}
 
 	for i, tt := range tests {
