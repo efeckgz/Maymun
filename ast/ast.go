@@ -4,7 +4,6 @@ import "github.com/efeckgz/Maymun/token"
 
 // Node represents the nodes of the AST.
 type Node interface {
-	// TokenLiteral returns the literal of the token it is associated with.
 	TokenLiteral() string
 }
 
@@ -26,7 +25,7 @@ type Program struct {
 	Statements []Statement
 }
 
-// TokenLiteral returns the literal of the token it is associated with.
+// TokenLiteral for Program returns the Literal of the root node of the AST.
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
