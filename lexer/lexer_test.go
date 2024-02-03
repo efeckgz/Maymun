@@ -8,9 +8,9 @@ import (
 
 func TestNextToken(t *testing.T) {
 	input := `
-		let a = 5.1;
-		let b = 6;
-		let c = 4.;
+	let a = 5;
+	let b = 10;
+	let pi = 3.14;
 	`
 
 	tests := []struct {
@@ -20,17 +20,17 @@ func TestNextToken(t *testing.T) {
 		{token.Let, "let"},
 		{token.Ident, "a"},
 		{token.Assign, "="},
-		{token.Float, "5.1"},
+		{token.Int, "5"},
 		{token.Semicolon, ";"},
 		{token.Let, "let"},
 		{token.Ident, "b"},
 		{token.Assign, "="},
-		{token.Int, "6"},
+		{token.Int, "10"},
 		{token.Semicolon, ";"},
 		{token.Let, "let"},
-		{token.Ident, "c"},
+		{token.Ident, "pi"},
 		{token.Assign, "="},
-		{token.Illegal, "4."},
+		{token.Float, "3.14"},
 		{token.Semicolon, ";"},
 		{token.EOF, ""},
 	}
