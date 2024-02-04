@@ -62,3 +62,16 @@ func (i *Identifier) expressionNode() {} // dummy method
 func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
+
+// ReturnStatement represents the ast node for return statements.
+type ReturnStatement struct {
+	Token       token.Token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode() {}
+
+// TokenLiteral represents the Literal value of the token that is associated with this statement.
+func (rs *ReturnStatement) TokenLiteral() string {
+	return rs.Token.Literal
+}
