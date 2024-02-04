@@ -11,8 +11,8 @@ func TestLetStatements(t *testing.T) {
 	input := `
 	let x = 5;
 	let y = 10;
-	let 838383;
-	let 3.14;
+	let foobar = 838383;
+	let pi = 3.14;
 	`
 
 	l := lexer.New(input)
@@ -42,6 +42,37 @@ func TestLetStatements(t *testing.T) {
 		stmt := program.Statements[i]
 		if !letStatementOk(t, stmt, tt.expectedIdentifier) {
 			return
+		}
+	}
+}
+
+func TestReturnStatements(t *testing.T) {
+	input := `
+	return 5;
+	return 10;
+	return 993322;
+	return 3.14;
+	`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 4 {
+		t.Fatalf("Unexpected number of statements: expected 4, got %d.\n", len(program.Statements))
+	}
+
+	for _, stmt := range program.Statements {
+		rs, ok := stmt.(*ast.ReturnStatement)
+		if !ok {
+			t.Errorf("Unexpected statement type: expected *ast.ReturnStatement, got %T.\n", stmt)
+			continue
+		}
+
+		if rs.TokenLiteral() != "return" {
+			t.Errorf("Unexpected token literal: expected return, got %s.\n", rs.TokenLiteral())
 		}
 	}
 }

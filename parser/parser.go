@@ -73,15 +73,6 @@ func (p *Parser) nextTokenIs(t token.Type) bool {
 	return p.nextToken.Type == t
 }
 
-// expectNext checks if the next token is the one specified.
-// func (p *Parser) expectNext(t token.Type) bool {
-// 	if p.nextTokenIs(t) {
-// 		return true
-// 	}
-
-// 	return false
-// }
-
 func (p *Parser) peekError(t token.Type) {
 	err := fmt.Sprintf("Unexpected next token: expected %s, got %s.", t, p.nextToken.Type)
 	p.errors = append(p.errors, err)
@@ -91,6 +82,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.Let:
 		return p.parseLetStatement()
+	case token.Return:
+		return p.parseReturnStatement()
 	default:
 		return nil
 	}
@@ -116,4 +109,15 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	}
 
 	return stmt
+}
+
+func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	rs := &ast.ReturnStatement{Token: p.curToken}
+	p.readToken()
+
+	for !p.curTokenIs(token.Semicolon) {
+		p.readToken()
+	}
+
+	return rs
 }
