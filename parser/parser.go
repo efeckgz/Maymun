@@ -54,9 +54,9 @@ func (p *Parser) nextTokenIs(t token.Type) bool {
 	return p.nextToken.Type == t
 }
 
+// expectNext checks if the next token is the one specified.
 func (p *Parser) expectNext(t token.Type) bool {
 	if p.nextTokenIs(t) {
-		p.readToken()
 		return true
 	}
 
@@ -79,6 +79,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 		return nil // If the next token after a token.Let is not an identifier return early.
 	}
 
+	p.readToken()
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectNext(token.Assign) {
