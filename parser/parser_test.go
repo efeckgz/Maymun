@@ -38,11 +38,6 @@ func TestLetStatements(t *testing.T) {
 
 	for i, tt := range tests {
 		stmt := program.Statements[i]
-
-		if stmt == nil {
-			t.Fatalf("The statement %d is nil.", i)
-		}
-
 		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
 			return
 		}
