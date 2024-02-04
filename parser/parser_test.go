@@ -38,13 +38,13 @@ func TestLetStatements(t *testing.T) {
 
 	for i, tt := range tests {
 		stmt := program.Statements[i]
-		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
+		if !letStatementOk(t, stmt, tt.expectedIdentifier) {
 			return
 		}
 	}
 }
 
-func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
+func letStatementOk(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "let" {
 		t.Errorf("Unexpected statement token literal: expected let, got %s.\n", s.TokenLiteral())
 		return false
