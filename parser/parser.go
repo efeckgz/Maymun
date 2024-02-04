@@ -29,7 +29,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 	program := &ast.Program{}
 	program.Statements = []ast.Statement{}
 
-	for p.curToken.Type != token.EOF {
+	for !p.curTokenIs(token.EOF) {
 		stmt := p.parseStatement()
 		if stmt != nil {
 			program.Statements = append(program.Statements, stmt)
@@ -78,13 +78,14 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	if !p.expectNext(token.Ident) {
 		return nil // If the next token after a token.Let is not an identifier return early.
 	}
-
 	p.readToken()
+
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectNext(token.Assign) {
 		return nil // If the next token after variable name is not '=', return early.
 	}
+	p.readToken()
 
 	for !p.curTokenIs(token.Semicolon) {
 		p.readToken() // TODO: We are skipping the expression to the right for now.
