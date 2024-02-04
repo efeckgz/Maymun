@@ -53,7 +53,7 @@ func (ls *LetStatement) TokenLiteral() string {
 // names as expressions in Maymun.
 type Identifier struct {
 	Token token.Token // token.Ident
-	Value string
+	Value string      // value should be the same as Token.Literal
 }
 
 func (i *Identifier) expressionNode() {} // dummy method
