@@ -11,8 +11,8 @@ func TestLetStatements(t *testing.T) {
 	input := `
 	let x = 5;
 	let y = 10;
-	let foobar = 838383;
-	let pi = 3.14;
+	let 838383;
+	let 3.14;
 	`
 
 	l := lexer.New(input)
@@ -22,6 +22,8 @@ func TestLetStatements(t *testing.T) {
 	if program == nil {
 		t.Fatal("ParseProgram() returned nil.")
 	}
+
+	checkParseErrors(t, p)
 
 	if len(program.Statements) != 4 {
 		t.Fatalf("Unexpected statement count: expected 3, got %d.\n", len(program.Statements))
@@ -42,6 +44,20 @@ func TestLetStatements(t *testing.T) {
 			return
 		}
 	}
+}
+
+func checkParseErrors(t *testing.T, p *Parser) {
+	errors := p.Errors()
+	if len(errors) == 0 {
+		return
+	}
+
+	t.Errorf("The parsers has %d errors.\n", len(errors))
+	for _, err := range errors {
+		t.Errorf("%q\n", err)
+	}
+
+	t.FailNow()
 }
 
 func letStatementOk(t *testing.T, s ast.Statement, name string) bool {
