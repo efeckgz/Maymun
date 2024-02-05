@@ -25,3 +25,17 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 
 	return il
 }
+
+func (p *Parser) parseFloatLiteral() ast.Expression {
+	fl := &ast.FloatLiteral{Token: p.curToken}
+
+	val, err := strconv.ParseFloat(p.curToken.Literal, 64)
+	if err != nil {
+		errMsg := fmt.Sprintf("could not parse %q as a float", p.curToken.Literal)
+		p.errors = append(p.errors, errMsg)
+		return nil
+	}
+
+	fl.Value = val
+	return fl
+}

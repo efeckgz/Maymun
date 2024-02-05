@@ -40,6 +40,7 @@ func New(l *lexer.Lexer) *Parser {
 
 	p.registerPrefix(token.Ident, p.parseIdentifier)
 	p.registerPrefix(token.Int, p.parseIntegerLiteral)
+	p.registerPrefix(token.Float, p.parseFloatLiteral)
 
 	// Read two tokens so that both curToken and peekToken are set
 	p.readToken()

@@ -139,6 +139,34 @@ func TestIntegerExpression(t *testing.T) {
 	}
 }
 
+func TestFloatExpression(t *testing.T) {
+	input := "3.14;"
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	s, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Unexpected statement type: expected *ast.ExpressionStatement, got %T.\n", s)
+	}
+
+	literal, ok := s.Expression.(*ast.FloatLiteral)
+	if !ok {
+		t.Fatalf("Unexpected expression type: expected *ast.FloatLiteral, got %T.\n", literal)
+	}
+
+	if literal.TokenLiteral() != "3.14" {
+		t.Errorf("Unexpected token literal: expected '3.14', got '%s'.\n", literal.TokenLiteral())
+	}
+
+	if literal.Value != 3.14 {
+		t.Errorf("Unexpected token value: expected 3.14, got %.2f.\n", literal.Value)
+	}
+}
+
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {

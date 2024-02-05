@@ -25,6 +25,21 @@ type IntegerLiteral struct {
 	Value int64
 }
 
+// FloatLiteral represents the float expression.
+type FloatLiteral struct {
+	Token token.Token
+	Value float64
+}
+
+// TokenLiteral returns the literal of the token it is associated with.
+func (fl *FloatLiteral) TokenLiteral() string {
+	return fl.Token.Literal
+}
+
+func (fl *FloatLiteral) String() string {
+	return fl.Token.Literal
+}
+
 // TokenLiteral returns the literal of the token it is assciated with.
 func (il *IntegerLiteral) TokenLiteral() string {
 	return il.Token.Literal
@@ -37,3 +52,4 @@ func (il *IntegerLiteral) String() string {
 // Implement the Expression interface
 func (i *Identifier) expressionNode()      {}
 func (il *IntegerLiteral) expressionNode() {}
+func (fl *FloatLiteral) expressionNode()   {}
