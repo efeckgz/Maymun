@@ -1,6 +1,10 @@
 package ast
 
-import "github.com/efeckgz/Maymun/token"
+import (
+	"bytes"
+
+	"github.com/efeckgz/Maymun/token"
+)
 
 // Identifier represents the left side of the assignment statement. It is the name of the variable.
 // For simplicity, Identifier implements the Expression interface. This means the parser treats the variable
@@ -49,7 +53,31 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// PrefixExpression represents expressions in the form of !ok or -4.
+type PrefixExpression struct {
+	Token    token.Token
+	Operator string
+	Right    Expression
+}
+
+// TokenLiteral returns the literal of the token it is associated with.
+func (pe *PrefixExpression) TokenLiteral() string {
+	return pe.Token.Literal
+}
+
+func (pe *PrefixExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(pe.Operator)
+	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+
+	return out.String()
+}
+
 // Implement the Expression interface
-func (i *Identifier) expressionNode()      {}
-func (il *IntegerLiteral) expressionNode() {}
-func (fl *FloatLiteral) expressionNode()   {}
+func (i *Identifier) expressionNode()        {}
+func (il *IntegerLiteral) expressionNode()   {}
+func (fl *FloatLiteral) expressionNode()     {}
+func (pe *PrefixExpression) expressionNode() {}
