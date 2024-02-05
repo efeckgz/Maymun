@@ -16,3 +16,7 @@ func (i *Identifier) expressionNode() {} // dummy method
 func (i *Identifier) TokenLiteral() string {
 	return i.Token.Literal
 }
+
+func (i *Identifier) String() string {
+	return i.Value
+}

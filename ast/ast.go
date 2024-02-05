@@ -1,8 +1,11 @@
 package ast
 
+import "bytes"
+
 // Node represents the nodes of the AST.
 type Node interface {
 	TokenLiteral() string
+	String() string
 }
 
 // Statement represents the statement nodes in the AST. It has one dummy method, and is only used to make writing easier.
@@ -30,4 +33,15 @@ func (p *Program) TokenLiteral() string {
 	}
 
 	return ""
+}
+
+// String for Program is the string representation of every statement in the program.
+func (p *Program) String() string {
+	var out bytes.Buffer
+
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+
+	return out.String()
 }
