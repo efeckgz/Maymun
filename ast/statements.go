@@ -13,8 +13,6 @@ type LetStatement struct {
 	Value Expression  // right side of the assignment
 }
 
-func (ls *LetStatement) statementNode() {} // dummy method
-
 // TokenLiteral returns the literal of the token it is associated with.
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
@@ -43,8 +41,6 @@ type ReturnStatement struct {
 	ReturnValue Expression
 }
 
-func (rs *ReturnStatement) statementNode() {}
-
 // TokenLiteral represents the Literal value of the token that is associated with this statement.
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
@@ -69,8 +65,6 @@ type ExpressionStatement struct {
 	Expression Expression
 }
 
-func (es *ExpressionStatement) statementNode() {}
-
 // TokenLiteral returns the Literal of the token it is associated with.
 func (es *ExpressionStatement) TokenLiteral() string {
 	return es.Token.Literal
@@ -83,3 +77,8 @@ func (es *ExpressionStatement) String() string {
 
 	return ""
 }
+
+// Implement the Statement interface
+func (ls *LetStatement) statementNode()        {}
+func (rs *ReturnStatement) statementNode()     {}
+func (es *ExpressionStatement) statementNode() {}

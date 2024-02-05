@@ -111,6 +111,34 @@ func TestIdentifierExpression(t *testing.T) {
 	}
 }
 
+func TestIntegerExpression(t *testing.T) {
+	input := "5;"
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	s, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Unexpected statement type, expected *ast.ExpressionStatement, got %T.\n", s)
+	}
+
+	literal, ok := s.Expression.(*ast.IntegerLiteral)
+	if !ok {
+		t.Fatalf("Unexpected type for literal: expected *ast.IntegerLiteral, got %T.\n", literal)
+	}
+
+	if literal.Value != 5 {
+		t.Errorf("Unexpected literal value: expected 5, got %d.\n", literal.Value)
+	}
+
+	if literal.TokenLiteral() != "5" {
+		t.Errorf("Unexpected literal token literal: expected '5', got '%s'.\n", literal.TokenLiteral())
+	}
+}
+
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
