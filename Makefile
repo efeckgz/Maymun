@@ -6,9 +6,9 @@ build:
 	go build -o bin/${BINARY_NAME} main.go
 
 test:
-	# go test -v ./lexer
+	go test -v ./lexer
 	go test -v ./parser
-	# go test -v ./ast
+	go test -v ./ast
 run:
 	./bin/${BINARY_NAME}
 

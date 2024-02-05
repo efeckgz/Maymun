@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/efeckgz/Maymun/ast"
@@ -167,6 +168,31 @@ func TestFloatExpression(t *testing.T) {
 	}
 }
 
+func TestParsingPrefixExpressions(t *testing.T) {
+	prefixTests := []struct {
+		input        string
+		operator     string
+		integerValue int64
+	}{
+		{"!5;", "!", 5},
+		{"-15", "-", 15},
+	}
+
+	for _, tt := range prefixTests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
+
+		s, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("Unexpected statement type, expected *ast.ExpressionStatement, got %T.\n", s)
+		}
+
+		// TODO: test casting to ast.PrefixExpression
+	}
+}
+
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
@@ -200,6 +226,26 @@ func letStatementOk(t *testing.T, s ast.Statement, name string) bool {
 
 	if letStmt.Name.TokenLiteral() != name {
 		t.Errorf("Unexpected s.Name: expected '%s', got '%s'.\n", name, letStmt.Name)
+		return false
+	}
+
+	return true
+}
+
+func integertLiteralOk(t *testing.T, il ast.Expression, value int64) bool {
+	integ, ok := il.(*ast.IntegerLiteral)
+	if !ok {
+		t.Errorf("Unexpected type: expected *ast.IntegerLiteral, got %T.\n", integ)
+		return false
+	}
+
+	if integ.Value != value {
+		t.Errorf("Unexpected value: expected %d, got %d.\n", value, integ.Value)
+		return false
+	}
+
+	if integ.TokenLiteral() != fmt.Sprintf("%d", value) {
+		t.Errorf("Unexpected token literal: expected %d, got %s.\n", value, integ.TokenLiteral())
 		return false
 	}
 
