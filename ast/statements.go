@@ -28,3 +28,16 @@ func (rs *ReturnStatement) statementNode() {}
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
 }
+
+// ExpressionStatement represents statements that consist solely of one expression.
+type ExpressionStatement struct {
+	Token      token.Token
+	Expression Expression
+}
+
+func (es *ExpressionStatement) statementNode() {}
+
+// TokenLiteral returns the Literal of the token it is associated with.
+func (es *ExpressionStatement) TokenLiteral() string {
+	return es.Token.Literal
+}
