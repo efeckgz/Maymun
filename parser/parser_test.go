@@ -184,12 +184,28 @@ func TestParsingPrefixExpressions(t *testing.T) {
 		program := p.ParseProgram()
 		checkParseErrors(t, p)
 
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain %d statements. got=%d\n",
+				1, len(program.Statements))
+		}
+
 		s, ok := program.Statements[0].(*ast.ExpressionStatement)
 		if !ok {
 			t.Fatalf("Unexpected statement type, expected *ast.ExpressionStatement, got %T.\n", s)
 		}
 
-		// TODO: test casting to ast.PrefixExpression
+		exp, ok := s.Expression.(*ast.PrefixExpression)
+		if !ok {
+			t.Fatalf("Unexpected expression type: expected *ast.PrefixExpression, got %T.\n", exp)
+		}
+
+		if exp.Operator != tt.operator {
+			t.Fatalf("Unexpected operator: expected %s, got %s\n", tt.operator, exp.Operator)
+		}
+
+		if !integertLiteralOk(t, exp.Right, tt.integerValue) {
+			return
+		}
 	}
 }
 

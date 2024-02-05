@@ -41,6 +41,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.Ident, p.parseIdentifier)
 	p.registerPrefix(token.Int, p.parseIntegerLiteral)
 	p.registerPrefix(token.Float, p.parseFloatLiteral)
+	p.registerPrefix(token.Bang, p.parsePrefixExpression)
+	p.registerPrefix(token.Minus, p.parsePrefixExpression)
 
 	// Read two tokens so that both curToken and peekToken are set
 	p.readToken()
@@ -162,6 +164,7 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
+		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
 

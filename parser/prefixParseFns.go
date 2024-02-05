@@ -5,7 +5,13 @@ import (
 	"strconv"
 
 	"github.com/efeckgz/Maymun/ast"
+	"github.com/efeckgz/Maymun/token"
 )
+
+func (p *Parser) noPrefixParseFnError(t token.Type) {
+	err := fmt.Sprintf("no prefix parse function for %s found.\n", t)
+	p.errors = append(p.errors, err)
+}
 
 func (p *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
@@ -38,4 +44,17 @@ func (p *Parser) parseFloatLiteral() ast.Expression {
 
 	fl.Value = val
 	return fl
+}
+
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	expression := &ast.PrefixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+	}
+
+	p.readToken()
+
+	expression.Right = p.parseExpression(prefix)
+
+	return expression
 }
