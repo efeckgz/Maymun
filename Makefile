@@ -8,7 +8,7 @@ build:
 test:
 	# go test -v ./lexer
 	go test -v ./parser
-
+	# go test -v ./ast
 run:
 	./bin/${BINARY_NAME}
 

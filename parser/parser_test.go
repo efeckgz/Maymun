@@ -77,6 +77,40 @@ func TestReturnStatements(t *testing.T) {
 	}
 }
 
+func TestIdentifierExpression(t *testing.T) {
+	input := "foobar;"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("Unexpected number of statemens: expected 1, got %d.\n", len(program.Statements))
+	}
+
+	// Check if the statement is an expression.
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Unexpected statement type: expected *ast.ExpressionStatement, got %T\n.", stmt)
+	}
+
+	// Check if the expression is an identifier.
+	ident, ok := stmt.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("Unexpected expression type: expected *ast.Identifier, got %T.\n", ident)
+	}
+
+	// Check if the values of the identifier are correct.
+	if ident.Value != "foobar" {
+		t.Fatalf("Unexpected identifier value: expected 'foobar', got '%s'.\n", ident.Value)
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		t.Fatalf("Unexpected identifier token literal: expected 'foobar', got '%s'.\n", ident.TokenLiteral())
+	}
+}
+
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {

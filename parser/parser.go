@@ -8,17 +8,36 @@ import (
 	"github.com/efeckgz/Maymun/token"
 )
 
+const (
+	_ int = iota
+	lowest
+	equals           // ==
+	comparisonEquals // >= or <=
+	comparison       // > or <
+	sum              // +
+	product          // *
+	prefix           // -x or !x
+	call             // square(x)
+)
+
+type prefixParseFn func() ast.Expression
+
 // Parser represents the inner state of the parser during the parsing of the source code.
 type Parser struct {
 	l         *lexer.Lexer // Lexer to lex the source code.
 	curToken  token.Token  // The current token the parses is evaluating.
 	nextToken token.Token  // The next token the parser will evaluate.
 	errors    []string     // string array to hold parsing errors.
+
+	prefixParseFns map[token.Type]prefixParseFn
 }
 
 // New creates a new parser.
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l, errors: []string{}}
+
+	p.prefixParseFns = make(map[token.Type]prefixParseFn)
+	p.registerPrefix(token.Ident, p.parseIdentifier)
 
 	// Read two tokens so that both curToken and peekToken are set
 	p.readToken()
@@ -78,6 +97,10 @@ func (p *Parser) peekError(t token.Type) {
 	p.errors = append(p.errors, err)
 }
 
+func (p *Parser) registerPrefix(tokenType token.Type, fn prefixParseFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.Let:
@@ -85,8 +108,12 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.Return:
 		return p.parseReturnStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {
@@ -120,4 +147,25 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	}
 
 	return rs
+}
+
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	es := &ast.ExpressionStatement{Token: p.curToken}
+	es.Expression = p.parseExpression(lowest)
+
+	if p.nextTokenIs(token.Semicolon) {
+		p.readToken()
+	}
+
+	return es
+}
+
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+
+	leftExp := prefix()
+	return leftExp
 }
