@@ -8,18 +8,6 @@ import (
 	"github.com/efeckgz/Maymun/token"
 )
 
-const (
-	_ int = iota
-	lowest
-	equals           // ==
-	comparisonEquals // >= or <=
-	comparison       // > or <
-	sum              // +
-	product          // *
-	prefix           // -x or !x
-	call             // square(x)
-)
-
 type prefixParseFn func() ast.Expression
 
 // Parser represents the inner state of the parser during the parsing of the source code.

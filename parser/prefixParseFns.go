@@ -9,7 +9,7 @@ import (
 )
 
 func (p *Parser) noPrefixParseFnError(t token.Type) {
-	err := fmt.Sprintf("no prefix parse function for %s found.\n", t)
+	err := fmt.Sprintf("no prefix parse function for %s found.", t)
 	p.errors = append(p.errors, err)
 }
 
